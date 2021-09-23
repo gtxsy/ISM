@@ -23,6 +23,8 @@ options(scipen = 999)
 # Create a bar chart for worldwide gross by genre
 ggplot(data=moviesAreTheBest) +
   aes(x=genre, y = worldwide_gross) + # set axis input data
+  labs(title = "Worldwide Gross Revenue per Genre", 
+       x = "Genre", y = "Worldwide Gross Revenue") + # set axis labels
   geom_bar(stat = "identity")
 ```
 
@@ -64,6 +66,8 @@ Issue #3: facet_rep_wrap is the function needed to enable repeat.tick.labels arg
 moviesAreTheBest %>%
    ggplot(aes(x =production_budget, y = domestic_gross)) +
    geom_point() +
+  labs(title = "MPAA Rating and Domestic Gross Revenue by Production Budget", 
+       x = "Production Budget", y = "Domestic Gross Revenue") +
    facet_rep_wrap(~mpaa_rating, repeat.tick.labels = TRUE) # repeat graph for each MPAA rating
 ```
 
@@ -75,6 +79,8 @@ moviesAreTheBest %>%
   mutate(year = year(release_date)) %>% # get the year from the release date
   group_by(year) %>% # group each movie into year released
   ggplot(aes(x=year)) +
+  labs(title = "Total Movies Released by Year", 
+       x = "Year", y = "Total Movies Released") +
   geom_line(stat="bin")
 ```
 
@@ -101,6 +107,8 @@ For each genre you can see the range of production budgets for various movies on
 movie_boxplot <- moviesAreTheBest %>%
   ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill=mpaa_rating)) + #color mpaa rating with fill
   geom_boxplot(show.legend = FALSE)+
+  labs(title = "Worldwide Gross Revenue by MPAA Rating", 
+       x = "Worldwide Gross Revenue", y = "MPAA Rating") +
   coord_flip() # rotate boxplot to view horizontally, instead of vertically
 
 ggplotly(movie_boxplot) # make the graph interactive
@@ -114,6 +122,7 @@ movie_boxplot <- moviesAreTheBest %>%
   filter(distributor == "Universal") %>% # filter for Universal movies only
   ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill = mpaa_rating)) + #color mpaa rating with fill
   geom_boxplot(show.legend = FALSE) +
+
   coord_flip() # rotate boxplot to view horizontally 
 
 ggplotly(movie_boxplot) # make the graph interactive
@@ -128,6 +137,8 @@ For each boxplot represented, rated PG-13 and rated G movies appeared right-skew
 moviesAreTheBest %>%
   ggplot(aes(x = genre, y = "", fill = genre)) + 
   geom_bar(stat = "identity") +
+  labs(title = "", 
+       x = "", y = "") +
   coord_polar("x", start = 0)
 ```
 
@@ -140,6 +151,8 @@ In this polar chart, we can see that there are more movies produced in the Drama
 stackedBarChart <- moviesAreTheBest %>%
   filter(distributor %in% c("Universal", "Warner Bros", "Sony Pictures")) %>% # filter these 3 studios
   ggplot(aes(x=distributor, fill=mpaa_rating)) + # color MPAA ratings to make stacked bars
+  labs(title = "", 
+       x = "", y = "") +
   geom_bar()
   
 ggplotly(stackedBarChart)
