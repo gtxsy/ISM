@@ -1,0 +1,135 @@
+---
+title: "ISM Assignment #1, Part 2"
+author: "Emmanuel Correa, Christian Gonzalez, Manuel Morera, Christopher Moustafa, Kyla Whiting"
+date: "9/17/2021"
+output: html_document
+---
+
+# Load packages and data
+```{r}
+
+library(tidyverse)
+library(scales)
+library(plotly)
+library(lemon)
+library(lubridate)
+
+moviesAreTheBest <- read.csv("movie_profit-1.csv")
+options(scipen = 999)
+```
+
+```{r}
+# 1
+ggplot(data=moviesAreTheBest) +
+  aes(x=genre, y = worldwide_gross) +
+  geom_bar(stat = "identity")
+```
+
+```{r}
+# 2
+moviesAreTheBest %>%
+  ggplot(aes(x = genre, y = worldwide_gross)) + 
+  scale_y_continuous(labels = dollar_format()) +
+  geom_bar(stat = "identity") +
+  labs(title = "Genre and Worldwide Gross Revenue by MPAA Rating", 
+       x = "Genre", y = "Worldwide Gross Revenue") + 
+  facet_rep_wrap(~mpaa_rating, repeat.tick.labels = TRUE)
+```
+
+```{r}
+#3 
+ggplot(data = moviesAreTheBest) + 
+  aes(x = mpaa_rating, y = worldwide_gross) + 
+  scale_y_continuous(labels = dollar_format()) + # missing parens 
+  geom_bar(stat = "identity") + # missing stat = identity 
+  labs(title = "Worldwide Gross Revenue by MPAA Rating", x = "MPAA Rating", y = "Worldwide Gross Revenue") + 
+  facet_rep_wrap(~genre, repeat.tick.labels = TRUE) #facet_rep_wrap not facet_wrap
+```
+
+Issue #1: Missing end parenthesis on the 3rd line
+
+Issue #2: Missing stat = "identity" argument on 4th line to enable y-axis input data
+
+Issue #3: facet_rep_wrap is the function needed to enable repeat.tick.labels argument
+
+
+```{r}
+#4
+moviesAreTheBest %>%
+   ggplot(aes(x =production_budget, y = domestic_gross)) +
+   geom_point() +
+   facet_rep_wrap(~mpaa_rating, repeat.tick.labels = TRUE)
+```
+
+
+```{r}
+#5
+moviesAreTheBest %>%
+  mutate(year = year(release_date)) %>%
+  group_by(year) %>%
+  ggplot(aes(x=year)) +
+  geom_line(stat="bin")
+```
+
+
+```{r}
+#6
+moviesAreTheBest %>%
+  filter(distributor == "Universal") %>%
+  ggplot(aes(x = production_budget, fill = mpaa_rating)) +
+  scale_x_continuous(labels = dollar_format()) +
+  geom_histogram() +
+  labs(title = "Distribution of Movies by Production Budget", 
+     x = "Production Budget", y = "Count", fill = "MPAA Rating") +
+  facet_rep_wrap(~genre, repeat.tick.labels = TRUE) 
+```
+
+For each genre you can see the range of production budgets for various movies on the x-axis,  which is then broken down by the MPAA rating. So by looking at the chart, it is evident that rated R and PG-13 movies have the highest production budgets compared to the other ratings. The only exception is for the adventure genre, where many PG rated movies also have the high production budget. 
+
+```{r}
+#7 part 1
+movie_boxplot <- moviesAreTheBest %>%
+  ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill=mpaa_rating)) +
+  geom_boxplot(show.legend = FALSE)+
+  coord_flip()
+
+ggplotly(movie_boxplot)
+```
+
+```{r}
+#7 part 2
+movie_boxplot <- moviesAreTheBest %>%
+  filter(distributor == "Universal") %>%
+  ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill = mpaa_rating)) +
+  geom_boxplot(show.legend = FALSE) +
+  coord_flip()
+
+ggplotly(movie_boxplot)
+```
+
+For each boxplot represented, rated PG-13 and rated G movies appeared right-skewed, while PG and rated R movies appeared symmetrical. In addition, all rated movies except rated G movies had upper-limit outliers.
+
+```{r}
+#8 part 1
+
+moviesAreTheBest %>%
+  ggplot(aes(x = genre, y = "", fill = genre)) + 
+  geom_bar(stat = "identity") +
+  coord_polar("x", start = 0)
+
+```
+
+In this polar chart, we can see that there are more movies produced in the Drama genre than any other genre. Conversely, Horror is the genre with the least amount of movies being produced.
+
+```{r}
+#8 part 2
+stackedBarChart <- moviesAreTheBest %>%
+  filter(distributor %in% c("Universal", "Warner Bros", "Sony Pictures")) %>%
+  ggplot(aes(x=distributor, fill=mpaa_rating)) +
+  geom_bar()
+  
+ggplotly(stackedBarChart)
+```
+
+Looking at the rating distribution for 3 studios’ films, we can see that these studios produce significantly more PG-13 and R-rated movies than any other rating. For example, Universal has released almost an equal number of PG-13 (119) and R-rated (111) movies, however they have released relatively very few G-rated movies (7). Of these 3 studios, Warner Bros has released the greatest number of R-rated movies (157), and Sony Pictures has released the greatest number of PG-13 movies (138).
+

@@ -1,0 +1,53 @@
+---
+title: "Lecture3"
+author: "CPG"
+date: "9/14/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+string1 <- c("John", "Smith")
+
+introduce <- 2
+exams <- c(15,14)
+assignments <- c(4,4,4,3,3,3)
+reflections <- c(1,1,1,1,1,1)
+finalReflection <- 5
+project1 <- 14
+project2 <- 13
+```
+
+```{r}
+exMatrix <- rbind(c(1,1,1),c(1,2,3), c(2,2,2))
+exMatrix
+```
+
+```{r}
+exMatrix <- rbind(assignments,reflections)
+View(exMatrix)
+```
+
+```{r}
+mean(exMatrix[1,])
+```
+
+```{r}
+mean(exMatrix["assignments",])
+```
+
+```{r}
+mean(exMatrix[,2])
+mean(exMatrix[,4])
+```
+
+```{r}
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+
+View(olympics)
+
+```
+
+
+

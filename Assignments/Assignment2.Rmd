@@ -1,0 +1,28 @@
+---
+title: "Assignment2"
+author: "CPG"
+date: "9/14/2021"
+output: html_document
+---
+
+# Load packages and data
+```{r}
+
+library(tidyverse)
+library(scales)
+library(plotly)
+library(lemon)
+
+olympics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-07-27/olympics.csv')
+```
+
+```{r}
+## 2A part 1
+# Age distribution
+age <- olympics %>%
+  ggplot(aes(x=age)) +
+  geom_bar()
+
+ggplotly(age)
+```
+
