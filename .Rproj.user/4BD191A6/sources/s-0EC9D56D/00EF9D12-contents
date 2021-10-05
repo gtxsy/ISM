@@ -41,7 +41,7 @@ vehicles <- read.csv("vehicles.csv")
 
 #Partition the data
 set.seed(1)
-split <- initial_split(vehicles, prop = 0.6)
+split <- initial_split(vehicles, prop = 0.6) #split 60/40
 training_vehicles <- training(split)
 testing_vehicles <- testing(split)
 ```
@@ -50,12 +50,28 @@ testing_vehicles <- testing(split)
 #2. Create a linear regression model to predict the MPG of a vehicle. Explain if your model is statistically significant and tell me the proportion of variation that is accounted for in the linear model. You can use simple linear regression or multiple linear regression (the choice is yours).
 
 ```{r}
+# Create linear regression model for MPG vs Vweight
+training_model <- lm(MPG ~ Vweight, data = vehicles)
 
+# Show summary of the model
+summary(training_model)
+
+# Visualize the data and the model
+vehicles %>%
+  ggplot(aes(x = Vweight, y = MPG)) +
+  geom_point() +
+  labs(title = "Distribution of Vehicle Weight vs MPG", 
+    x = "Vehicle Weight", y = "MPG") + 
+  geom_smooth(se = FALSE, method = "lm")
 ```
+
+The model is statistically significant due to the extremely low p-value which approximates 0.
+We have an R-squared value of 0.69 which means 69% of the data can be explained by our regression model.
+
 
 #3. Create a visual that shows the residuals of your linear model. Explain what this tells you about your model.
 
 ```{r}
-
+training_model_1
 ```
 

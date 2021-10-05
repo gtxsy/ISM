@@ -62,7 +62,7 @@ testing_heating <- testing(split)
 nrow(training_heating)
 nrow(testing_heating)
 
-home_heating %>%
+store_the_graph <- home_heating %>%
   ggplot(aes(x = Home_Age, y = Heating_Oil_Used)) +
   geom_point() +
   geom_smooth(se = FALSE, method = "lm")

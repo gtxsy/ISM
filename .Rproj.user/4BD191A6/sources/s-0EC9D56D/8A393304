@@ -3,7 +3,7 @@
     "path": "~/Desktop/ISM/R/Assignments/Assignment1.Rmd",
     "project_path": "Assignments/Assignment1.Rmd",
     "type": "r_markdown",
-    "hash": "3904349226",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1633457966735.0,
@@ -12,8 +12,8 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "16,0",
-        "scrollLine": "4",
+        "cursorPosition": "37,0",
+        "scrollLine": "24",
         "ignored_words": "boxplot\n"
     },
     "folds": "",
