@@ -3,7 +3,7 @@
     "path": "~/Desktop/ISM/R/Assignments/Assignment3.Rmd",
     "project_path": "Assignments/Assignment3.Rmd",
     "type": "r_markdown",
-    "hash": "4205031440",
+    "hash": "1673824874",
     "contents": "",
     "dirty": false,
     "created": 1633453138520.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "63,34",
-        "scrollLine": "45"
+        "cursorPosition": "81,24",
+        "scrollLine": "77"
     },
     "folds": "",
-    "lastKnownWriteTime": 1633459970,
+    "lastKnownWriteTime": 1633460593,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1633459970678,
+    "last_content_update": 1633460593366,
     "read_only": false,
     "read_only_alternatives": []
 }

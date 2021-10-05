@@ -72,6 +72,14 @@ We have an R-squared value of 0.69 which means 69% of the data can be explained 
 #3. Create a visual that shows the residuals of your linear model. Explain what this tells you about your model.
 
 ```{r}
-training_model_1
+# Get and store residuals data from our model
+model_residuals = resid(training_model)
+
+# Visualize residuals
+vehicles %>%
+  ggplot(aes(x = Vweight, y = model_residuals)) +
+  geom_point() +
+  labs(title = "Residual", 
+    x = "Vehicle Weight", y = "Residual")
 ```
 
