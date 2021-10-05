@@ -14,6 +14,10 @@ library(plotly)
 library(lemon)
 library(lubridate)
 library(fivethirtyeight)
+library(forcats)
+library(tidymodels)
+library(forecast)
+library(caret)
 
 options(scipen = 999)
 ```
@@ -21,6 +25,35 @@ options(scipen = 999)
 ## PART 1
 
 #1 Which majors have the lowest unemployment rate? 
+
+```{r}
+
+```
+
+
+## PART 3
+
+#1. Partition your data so that 60% is training, and 40% is testing data. Create a data-frame called "training_vehicles" (this will have 60% of your original vehicles data) and another called "testing_vehicles" (this will have 40% of your original vehicles data).
+
+```{r}
+#Load the data
+vehicles <- read.csv("vehicles.csv")
+
+#Partition the data
+set.seed(1)
+split <- initial_split(vehicles, prop = 0.6)
+training_vehicles <- training(split)
+testing_vehicles <- testing(split)
+```
+
+
+#2. Create a linear regression model to predict the MPG of a vehicle. Explain if your model is statistically significant and tell me the proportion of variation that is accounted for in the linear model. You can use simple linear regression or multiple linear regression (the choice is yours).
+
+```{r}
+
+```
+
+#3. Create a visual that shows the residuals of your linear model. Explain what this tells you about your model.
 
 ```{r}
 

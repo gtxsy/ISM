@@ -1,0 +1,163 @@
+---
+title: "ISM Assignment #1, Part 2"
+author: "Emmanuel Correa, Christian Gonzalez, Manuel Morera, Christopher Moustafa, Kyla Whiting"
+date: "9/17/2021"
+output: html_document
+---
+
+# Load packages and data
+```{r}
+
+library(tidyverse)
+library(scales)
+library(plotly)
+library(lemon)
+library(lubridate)
+
+moviesAreTheBest <- read.csv("movie_profit-1.csv")
+options(scipen = 999)
+```
+
+#1
+```{r}
+# Create a bar chart for worldwide gross by genre
+ggplot(data=moviesAreTheBest) +
+  aes(x=genre, y = worldwide_gross) + # set axis input data
+  labs(title = "Worldwide Gross Revenue per Genre", 
+       x = "Genre", y = "Worldwide Gross Revenue") + # set axis labels
+  geom_bar(stat = "identity")
+```
+
+#2
+```{r}
+# Create a bar chart for worldwide gross by genre for each  MPAA Rating
+moviesAreTheBest %>%
+  ggplot(aes(x = genre, y = worldwide_gross)) + 
+  scale_y_continuous(labels = dollar_format()) + # set $ to y-axis values
+  geom_bar(stat = "identity") +
+  labs(title = "Genre and Worldwide Gross Revenue by MPAA Rating", 
+       x = "Genre", y = "Worldwide Gross Revenue") + # set axis labels
+  facet_rep_wrap(~mpaa_rating, repeat.tick.labels = TRUE) # repeat graph for each MPAA rating
+```
+
+#3
+```{r}
+# Create a bar chart for worldwide gross by MPAA rating for each genre
+# NOTE: Mistakes identified in comments below
+ggplot(data = moviesAreTheBest) + 
+  aes(x = mpaa_rating, y = worldwide_gross) + 
+  scale_y_continuous(labels = dollar_format()) + # missing parens 
+  geom_bar(stat = "identity") + # missing stat = identity 
+  labs(title = "Worldwide Gross Revenue by MPAA Rating", x = "MPAA Rating", y = "Worldwide Gross Revenue") + 
+  facet_rep_wrap(~genre, repeat.tick.labels = TRUE) #facet_rep_wrap not facet_wrap
+```
+
+Issue #1: Missing end parenthesis on the 3rd line
+
+Issue #2: Missing stat = "identity" argument on 4th line to enable y-axis input data
+
+Issue #3: facet_rep_wrap is the function needed to enable repeat.tick.labels argument
+
+
+
+#4
+```{r}
+# Create a scatter plot for domestic gross by production budget for each MPAA Rating
+moviesAreTheBest %>%
+   ggplot(aes(x =production_budget, y = domestic_gross)) +
+   geom_point() +
+  labs(title = "MPAA Rating and Domestic Gross Revenue by Production Budget", 
+       x = "Production Budget", y = "Domestic Gross Revenue") +
+   facet_rep_wrap(~mpaa_rating, repeat.tick.labels = TRUE) # repeat graph for each MPAA rating
+```
+
+
+#5
+```{r}
+# Create a line graph to count movies made per year
+moviesAreTheBest %>%
+  mutate(year = year(release_date)) %>% # get the year from the release date
+  group_by(year) %>% # group each movie into year released
+  ggplot(aes(x=year)) +
+  labs(title = "Total Movies Released by Year", 
+       x = "Year", y = "Total Movies Released") +
+  geom_line(stat="bin")
+```
+
+
+#6
+```{r}
+# Create a histogram for distribution of Universal films by production budget for each genre
+moviesAreTheBest %>%
+  filter(distributor == "Universal") %>% # filter for Universal movies only
+  ggplot(aes(x = production_budget, fill = mpaa_rating)) + #color MPAA rating in each bar
+  scale_x_continuous(labels = dollar_format()) +
+  geom_histogram() +
+  labs(title = "Distribution of Movies by Production Budget", 
+     x = "Production Budget", y = "Total Movies", fill = "MPAA Rating") +
+  facet_rep_wrap(~genre, repeat.tick.labels = TRUE) 
+```
+
+For each genre you can see the range of production budgets for various movies on the x-axis,  which is then broken down by the MPAA rating. So by looking at the chart, it is evident that rated R and PG-13 movies have the highest production budgets compared to the other ratings. The only exception is for the adventure genre, where many PG rated movies also have the high production budget. 
+
+
+#7 part 1
+```{r}
+# Create a boxplot for worldwide gross by MPAA rating 
+movie_boxplot <- moviesAreTheBest %>%
+  ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill=mpaa_rating)) + #color mpaa rating with fill
+  geom_boxplot(show.legend = FALSE)+
+  labs(title = "Worldwide Gross Revenue by MPAA Rating", 
+       x = "MPAA Rating", y = "Worldwide Gross Revenue") +
+  coord_flip() # rotate boxplot to view horizontally, instead of vertically
+
+ggplotly(movie_boxplot) # make the graph interactive
+```
+
+
+#7 part 2
+```{r}
+# Create a boxplot for worldwide gross by MPAA rating for Universal films
+movie_boxplot <- moviesAreTheBest %>%
+  filter(distributor == "Universal") %>% # filter for Universal movies only
+  ggplot(aes(x=mpaa_rating,y=worldwide_gross, fill = mpaa_rating)) + #color mpaa rating with fill
+  geom_boxplot(show.legend = FALSE) +
+  labs(title = "Worldwide Gross Revenue by MPAA Rating for Universal Films", 
+       x = "MPAA Rating", y = "Worldwide Gross Revenue") +
+  coord_flip() # rotate boxplot to view horizontally 
+
+ggplotly(movie_boxplot) # make the graph interactive
+```
+
+For each boxplot represented, rated PG-13 and rated G movies appeared right-skewed, while PG and rated R movies appeared symmetrical. In addition, all rated movies except rated G movies had upper-limit outliers.
+
+
+#8 part 1
+```{r}
+# Create a polar chart to view distribution of movies by genre
+moviesAreTheBest %>%
+  ggplot(aes(x = genre, y = "", fill = genre)) + 
+  geom_bar(stat = "identity") +
+  labs(title = "Distribution of Movies by Genre", 
+       x = "Total Movies", y = "Total Movies") +
+  coord_polar("x", start = 0)
+```
+
+In this polar chart, we can see that there are more movies produced in the Drama genre than any other genre. Conversely, Horror is the genre with the least amount of movies being produced.
+
+
+#8 part 2
+```{r}
+# Create a stacked bar chart to compare distribution of movies by MPAA Rating from 3 studios
+stackedBarChart <- moviesAreTheBest %>%
+  filter(distributor %in% c("Universal", "Warner Bros", "Sony Pictures")) %>% # filter these 3 studios
+  ggplot(aes(x=distributor, fill=mpaa_rating)) + # color MPAA ratings to make stacked bars
+  labs(title = "Distribution of Movies by MPAA Rating for 3 Studios", 
+       x = "Distributor", y = "Total Movies", fill="MPAA Rating") +
+  geom_bar()
+  
+ggplotly(stackedBarChart)
+```
+
+Looking at the rating distribution for 3 studios’ films, we can see that these studios produce significantly more PG-13 and R-rated movies than any other rating. For example, Universal has released almost an equal number of PG-13 (119) and R-rated (111) movies, however they have released relatively very few G-rated movies (7). Of these 3 studios, Warner Bros has released the greatest number of R-rated movies (157), and Sony Pictures has released the greatest number of PG-13 movies (138).
+

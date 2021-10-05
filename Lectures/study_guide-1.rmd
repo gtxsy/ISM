@@ -1,0 +1,82 @@
+
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(forcats)
+library(tidymodels)
+library(forecast)
+library(caret)
+
+
+home_heating <- read_csv("home_heating_oil-1.csv")
+bad_drivers <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/bad-drivers/bad-drivers.csv")
+
+epa <- read_csv("vehicleFuelEconomy.csv")
+
+View(bad_drivers)
+View(home_heating)
+
+bad_drivers %>%
+  ggplot(aes(x = `Car Insurance Premiums ($)`)) +
+  geom_histogram(bins = 5)
+
+View(lakers)
+
+lakers <- lakers
+
+View(lakers)
+
+
+store_this_somewhere <- lakers %>%
+  mutate(date = ymd(date)) %>%
+  mutate(year = year(date)) %>%
+  mutate(month = month(date)) %>%
+  select(date, year, month)
+
+View(store_this_somewhere)
+
+View(epa)
+
+epa %>%
+  filter(Make == "Acura") %>%
+  group_by(Class) %>%
+  summarize(average_mpg = mean(`City MPG (FT1)`)) %>%
+  mutate(Class = fct_reorder(Class, average_mpg, .desc = FALSE)) %>%
+  ggplot(aes(x = Class, y = average_mpg, fill = Class)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "The best graph I've ever done", x = "Average MPG", y = "Class", subtitle = "I found something cool") +
+  coord_flip()
+```
+
+## Partition our data
+
+```{r}
+
+set.seed(1)
+split <- initial_split(home_heating, prop = 0.7)
+training_heating <- training(split)
+testing_heating <- testing(split)
+
+nrow(training_heating)
+nrow(testing_heating)
+
+home_heating %>%
+  ggplot(aes(x = Home_Age, y = Heating_Oil_Used)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = "lm")
+
+training_model_1 <- lm(Heating_Oil_Used ~ Home_Age + Home_Size, data = home_heating)
+training_model_2 <- lm(Heating_Oil_Used ~ Home_Age, data = home_heating)
+
+options(scipen = 999)
+summary(training_model_1)
+summary(training_model_2)
+
+
+
+98.69133 + 3.16835*12
+
+```
+
